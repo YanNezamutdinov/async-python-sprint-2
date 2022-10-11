@@ -10,3 +10,9 @@ class Job:
 
     def stop(self):
         pass
+
+
+def print_job():
+    print("print_job is runing!")
+
+
