@@ -1,10 +1,9 @@
-# def coroutine(f):
-#     def wrap(*args, **kwargs):
-#         gen = f(*args, **kwargs)
-#         gen.send(None)
-#         return gen
-#     return wrap
-from concurrent.futures.thread import ThreadPoolExecutor
+def coroutine(f):
+    def wrap(*args, **kwargs):
+        gen = f(*args, **kwargs)
+        gen.send(None)
+        return gen
+    return wrap
 
 
 class Scheduler:
@@ -14,19 +13,18 @@ class Scheduler:
 
     def schedule(self, task):
         self.tasks.append(task)
+        print(self.tasks)
+        self.run().send(task)
 
-    # @coroutine
+    @coroutine
     def run(self):
-        with ThreadPoolExecutor(max_workers=self.pool_size) as pool:
-            futures = {pool.submit(task() for task in self.tasks}
-            for future in as_completed(futures):
-                try:
-                    item = dict()
-                    item['city_name'] = futures[future]
-                    item['forecasts'] = future.result()['forecasts']
-                    result.append(item)
-                except Exception as exc:
-                    print(f'{futures[future]} сгенерировано исключение: {exc}')  # Бобавить логтрование
+        try:
+            while True:
+                data_chunk = (yield)
+                self.tasks.remove(data_chunk)
+                data_chunk()
+        except GeneratorExit:
+            pass
 
     def restart(self):
         pass
