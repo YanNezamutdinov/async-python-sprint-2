@@ -1,6 +1,10 @@
+from time import sleep
+
+
 class Job:
     def __init__(self, start_at="", max_working_time=-1, tries=0, dependencies=[]):
-        pass
+        sleep(2)
+        print(start_at)
 
     def run(self):
         pass
@@ -12,7 +16,9 @@ class Job:
         pass
 
 
-def print_job():
-    print("print_job is runing!")
+# class DeferredJob(Job):
+#
+#     def run(self):
+
 
 
