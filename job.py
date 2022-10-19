@@ -1,9 +1,8 @@
-from time import sleep
+from threading import Thread
 
 
 class Job:
     def __init__(self, start_at="", max_working_time=-1, tries=0, dependencies=[]):
-        sleep(2)
         print(start_at)
 
     def run(self):

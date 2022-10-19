@@ -19,44 +19,49 @@ def coroutine(f):
 class Scheduler:
     def __init__(self, pool_size: 10):
         self.pool_size = pool_size
-        self.tasks = list()
-        self.q = Queue()
 
-    def schedule(self, **kargs):
-        with open('myfile.json', mode='r') as f:
-            data = json.load(f)
-        data[str(uuid.uuid4())] = [kargs]
+    def schedule(self, **kwargs):
+        # with open('myfile.txt', 'a') as f:
+        #     line = f'{uuid.uuid4()}: {kargs}'
+        #     f.write(line)
+        #     f.write('\n')
+        for key in kwargs:
+            print(key)
+
+        with open('myfile.json', 'r') as f:
+            try:
+                data = json.load(f)
+            except:
+                data = list()
+        data.append({str(uuid.uuid4()): dict(kwargs)})
+
         with open('myfile.json', 'w') as f:
-            json.dump(data, fp=f, ensure_ascii=False, indent=4)
+            json.dump(data, f)
 
-        with open('myfile.json') as f:
-            data = json.load(f)
-        print(data)
 
-        try:
-            self.run().send(True)
-        except StopIteration:
-            pass
+        # data = {line.strip() for line in open("myfile.txt", 'r')}
 
 
     @coroutine
     def run(self):
         try:
             while True:
-                data_chunk = (yield)
-                if data_chunk:
-                    with ThreadPoolExecutor(max_workers=self.pool_size) as pool:
-                        # return pool.submit(Job, **self.tasks.pop()).result()
-                        futures = []
-                        # for kargs in self.tasks:
-                        futures.append(pool.submit(Job, ))
-                        for future in as_completed(futures):
-                            print(future.result())
+                for line in open("myfile.json", 'r'):
+                    print(line.get('start_at'))
+                # data = {dict(line) for line in open("myfile.json", 'r')}
+                with ThreadPoolExecutor(max_workers=self.pool_size) as pool:
+                    # for item in data:
+                    #     print(item.get('start_at'))
+                    # futures = []
+                    # futures.append(pool.submit(Job, ))
+                    # for future in as_completed(futures):
+                    #     print(future.result())
+                    pass
         except GeneratorExit:
             pass
 
-    def restart(self):
-        pass
-
-    def stop(self):
-        pass
+    # def restart(self):
+    #     pass
+    #
+    # def stop(self):
+    #     pass
