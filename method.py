@@ -4,6 +4,8 @@ from urllib.request import urlopen
 
 logger = logging.getLogger()
 
+FILE = "myfile.json"
+
 CITIES = {
     "MOSCOW": "https://code.s3.yandex.net/async-module/moscow-response.json",
     "PARIS": "https://code.s3.yandex.net/async-module/paris-response.json",

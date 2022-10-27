@@ -1,5 +1,6 @@
 import threading
 from datetime import datetime
+from typing import Optional, List
 
 from funcshions import dct_func
 
@@ -7,7 +8,13 @@ from funcshions import dct_func
 class Job:
 
     @staticmethod
-    def run(key=None, func=None, cond=None, start_at=None, max_working_time=None, tries=1, dependencies=[]):
+    def run(key: str,
+            func: str,
+            cond: threading.Condition,
+            start_at: Optional[str] = None,
+            max_working_time: Optional[str] = None,
+            tries: int = 1,
+            dependencies: Optional[List[str]] = None) -> str:
         while tries > 0:
             try:
                 with cond:
@@ -21,10 +28,10 @@ class Job:
                             timer.start()
                             timer.join(max_working_time)
                     else:
-                            thread = threading.Thread(target=dct_func.get(func))
-                            thread.start()
-                            thread.join(max_working_time)
-                            tries -= 1
+                        thread = threading.Thread(target=dct_func.get(func))
+                        thread.start()
+                        thread.join(max_working_time)
+                        tries -= 1
                     if not dependencies:
                         cond.notify_all()
             except Exception:
